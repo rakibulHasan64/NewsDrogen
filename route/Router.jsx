@@ -5,6 +5,9 @@ import CatgoryNews from "../src/cmponet/home/CatgoryNews";
 import AuthLayout from "../src/cmponet/home/AuthLayout";
 import Login from "../src/cmponet/auth/Login";
 import Register from "../src/cmponet/auth/Reguster"; 
+import NwesDetlis from "../src/cmponet/home/NwesDetlis";
+import PrivateRoute from "../src/cmponet/auth/PrivateRoute";
+import Lodding from "../src/cmponet/auth/Loddinge";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +21,8 @@ export const router = createBrowserRouter([
       {
         path: "/category/:id",
         element: <CatgoryNews />,
-        loader: () => fetch("/nwes.json") 
+        loader: () => fetch("/nwes.json"),
+        hydrateFallbackElement:<Lodding />
       }
     ]
   },
@@ -36,5 +40,14 @@ export const router = createBrowserRouter([
         element: <Register />
       }
     ]
+  },
+  {
+    path: "/news/:id",
+    element: <PrivateRoute >
+      <NwesDetlis />
+      </PrivateRoute>,
+    loader: () => fetch("/nwes.json"),
+    hydrateFallbackElement: <Lodding />
   }
+
 ]);

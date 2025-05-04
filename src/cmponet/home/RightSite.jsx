@@ -10,7 +10,7 @@ function RightSite() {
          <div className="">
             <Suspense fallback={
                <div>
-                  Lodinge....
+                  <span className="loading loading-dots loading-xl"></span>
                </div>
 
 

@@ -1,31 +1,45 @@
-import React, { useState } from 'react';
+import React, { useContext,  useState } from 'react';
 import { BiSolidShow } from 'react-icons/bi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../provider/AuthProvider';
 
 function Register() {
    const [accepted, setAccepted] = useState(false);
    const [show, setShow] = useState(false);
+   const navget = useNavigate();
+
+   const { createUser, updatedUser,setUser }=useContext(AuthContext)
 
    const handleSubmit = (e) => {
       e.preventDefault();
 
-      // event.target.elements থেকে ইনপুট ডাটা সংগ্রহ
       const formElements = e.target.elements;
       const name = formElements.name.value;
       const photoURL = formElements.photoURL.value;
       const email = formElements.email.value;
       const password = formElements.password.value;
 
-      const formData = {
-         name,
-         photoURL,
-         email,
-         password
-      };
+      createUser(email, password)
+         .then(result => {
+            const user = result.user;
 
-      // এখন formData ব্যবহার করে আপনি যা চান সেটি করতে পারবেন
-      console.log(formData);
+            updatedUser({ displayName: name, photoURL: photoURL })
+               .then(() => {
+                  setUser({ ...user, displayName: name, photoURL: photoURL });
+                  navget("/")
+                  e.target.reset();
+               })
+               .catch((error) => {
+                  console.error("Profile update failed:", error);
+                  setUser(user); 
+               });
+
+         })
+         .catch((error) => {
+            alert(error.message);
+         });
    };
+
 
    return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
